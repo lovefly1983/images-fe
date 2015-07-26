@@ -4,16 +4,42 @@
   <meta charset="utf-8">
   <title>My AngularJS App</title>
   <link rel="stylesheet" href="css/app.css"/>
+  <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
 </head>
-<body>
+<body ng-controller="PhoneListCtrl">
   <ul class="menu">
     <li><a href="#/view1">view1</a></li>
     <li><a href="#/view2">view2</a></li>
+    <li><a href="#/login">login</a></li>
+    <li><a href="#/dashboard">dashboard</a></li>
   </ul>
+
 
   <div ng-view></div>
 
+  <button ng-click="callIt()">CallIt</button>
+
   <div>Angular seed app: v<span app-version></span></div>
+  <hr>
+  <h3>This is for ng-repeat</h3>
+  <input type="text" ng-model="query">
+  <ul>
+    <li ng-repeat="phone in phones | filter:query">
+      {{phone.name}}
+      <p>{{phone.snippet}}</p>
+    </li>
+  </ul>
+  <hr>
+
+  <h3>This is for data binding</h3>
+  Your name: <input type="text" ng-model="yourname" placeholder="World">
+  <hr>
+  Hello {{yourname || 'World'}}!
+
+  <table>
+    <tr><th>row number</th></tr>
+    <tr ng-repeat="i in [0, 1]"><td>{{i}}</td></tr>
+  </table>
 
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
@@ -24,5 +50,9 @@
   <script src="js/controllers.js"></script>
   <script src="js/filters.js"></script>
   <script src="js/directives.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="lib/jquery/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
