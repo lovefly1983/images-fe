@@ -7,18 +7,14 @@ function MyCtrl1() {}
 MyCtrl1.$inject = [];
 
 
-function MyCtrl2() {
-}
+function MyCtrl2() {}
 MyCtrl2.$inject = [];
 
 
-function Login() {
-}
+function Login() {}
 Login.$inject = [];
 
-function Dashboard() {
-
-}
+function Dashboard() {}
 Dashboard.$inject = [];
 
 function PhoneListCtrl($scope, $http) {
@@ -51,10 +47,10 @@ function PhoneListCtrl($scope, $http) {
     $scope.callIt = function () {
         $http.get('../comp/status').
             success(function(data, status, headers, config) {
-                $scope.yourname = data.status;
+                $scope.status = data.status;
             }).
             error(function(data, status, headers, config) {
-                $scope.yourName = data.status;
+                $scope.status = data.status;
             });
     }
 }
