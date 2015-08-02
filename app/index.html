@@ -16,31 +16,39 @@
 
 
   <div ng-view></div>
+  <div id="mainTestContent">
+      <h3>This is for test cross domain restful API call.</h3>
+      <button ng-click="callIt()">Call Restful (Cross domain)</button>
+      <h3>This is for data binding</h3>
+      Your name: <input type="text" ng-model="status" placeholder="World"><br>
+      Hello {{status || 'World'}}!
+      <div>Angular seed app: v<span app-version></span></div>
 
-  <button ng-click="callIt()">CallIt</button>
+      <hr>
+      <h3>This is for ng-repeat</h3>
+      <input type="text" ng-model="query">
+      <ul>
+        <li ng-repeat="phone in phones | filter:query">
+          {{phone.name}}
+          <p>{{phone.snippet}}</p>
+        </li>
+      </ul>
+      <hr>
 
-  <div>Angular seed app: v<span app-version></span></div>
-  <hr>
-  <h3>This is for ng-repeat</h3>
-  <input type="text" ng-model="query">
-  <ul>
-    <li ng-repeat="phone in phones | filter:query">
-      {{phone.name}}
-      <p>{{phone.snippet}}</p>
-    </li>
-  </ul>
-  <hr>
-
-  <h3>This is for data binding</h3>
-  Your name: <input type="text" ng-model="yourname" placeholder="World">
-  <hr>
-  Hello {{yourname || 'World'}}!
-
-  <table>
-    <tr><th>row number</th></tr>
-    <tr ng-repeat="i in [0, 1]"><td>{{i}}</td></tr>
-  </table>
-
+      <h3>This is for RESTful solr request</h3>
+      <div>
+        <input type="text" ng-model="searchStr">
+        <button ng-click="search()">Search</button>
+        <br>
+        <input type="text" ng-model="docToAdd">
+        <button ng-click="addDoc()">AddDocToSolr</button>
+        <ul>
+          <li ng-repeat="doc in docs">
+            {{doc.id}} -- {{doc.title}}
+          </li>
+        </ul>
+      </div>
+  </div>
   <!-- In production use:
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
   -->

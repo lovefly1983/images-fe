@@ -166,3 +166,8 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+
+#mainTestContent {
+  margin-left: 80px;
+}
