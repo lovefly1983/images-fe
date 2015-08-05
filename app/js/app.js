@@ -10,3 +10,4 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives'])
       $routeProvider.when('/dashboard', {templateUrl: 'partials/dashboard.html', controller: Dashboard});
       $routeProvider.otherwise({redirectTo: '/view1'});
   }]);
+
