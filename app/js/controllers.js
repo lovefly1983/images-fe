@@ -4,18 +4,22 @@
 
 
 function MyCtrl1() {}
-MyCtrl1.$inject = [];
-
-
 function MyCtrl2() {}
-MyCtrl2.$inject = [];
 
-
-function Login() {}
-Login.$inject = [];
+function Login($scope, $http) {
+    $scope.register = function() {
+        if ($scope.user.email !== undefined && $scope.password !== undefined) {
+            $http.post('../comp/user/register', {email : $scope.user.email, password : md5($scope.password)}).
+                success(function(data, status, headers, config) {
+                }).
+                error(function(data, status, headers, config) {
+                    alert("fail " +  $scope.user.email + " password: " + md5($scope.password));
+                });
+        }
+    }
+}
 
 function Dashboard() {}
-Dashboard.$inject = [];
 
 function PhoneListCtrl($scope, $http) {
     $scope.phones = [
