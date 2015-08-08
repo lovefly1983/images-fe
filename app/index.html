@@ -14,9 +14,16 @@
     <li><a href="#/dashboard">dashboard</a></li>
   </ul>
 
-
   <div ng-view></div>
   <div id="mainTestContent">
+      <h3>This is for image upload</h3>
+      <form action="comp/file/upload" method="post" enctype="multipart/form-data">
+          <p>
+              Select a file : <input type="file" name="file" size="45" />
+          </p>
+          <input type="submit" value="Upload It" />
+      </form>
+
       <h3>This is for test cross domain restful API call.</h3>
       <button ng-click="callIt()">Call Restful (Cross domain)</button>
       <h3>This is for data binding</h3>
