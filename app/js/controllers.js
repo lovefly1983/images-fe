@@ -38,7 +38,7 @@ function PhoneListCtrl($scope, $http) {
             error(function(data, status, headers, config) {
                 alert("error");
             });
-    }
+    };
     $scope.addDoc = function() {
         $http.post('../comp/solr/add', {id : $scope.docToAdd, title : $scope.docToAdd}).
             success(function(data, status, headers, config) {
@@ -47,7 +47,7 @@ function PhoneListCtrl($scope, $http) {
             error(function(data, status, headers, config) {
                 $scope.status = "add fails..."
             });
-    }
+    };
     $scope.callIt = function () {
         $http.get('../comp/status').
             success(function(data, status, headers, config) {
@@ -56,5 +56,15 @@ function PhoneListCtrl($scope, $http) {
             error(function(data, status, headers, config) {
                 $scope.status = data.status;
             });
+    };
+    $scope.listFiles = function() {
+        $http.get('/comp/file').
+            success(function(data, status, headers, config) {
+                $scope.images = data.imageList;
+            }).
+            error(function(data, status, headers, config) {
+                $scope.status = data.status;
+            });
     }
+
 }

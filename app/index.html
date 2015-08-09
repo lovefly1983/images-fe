@@ -117,6 +117,12 @@
                 </p>
                 <input type="submit" value="Upload It" />
             </form>
+            <button ng-click="listFiles()">list images</button>
+            <ul>
+                <li ng-repeat="image in images">
+                    <p>{{image}}</p>
+                </li>
+            </ul>
 
             <h3>This is for test cross domain restful API call.</h3>
             <button ng-click="callIt()">Call Restful (Cross domain)</button>
