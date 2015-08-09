@@ -1,80 +1,170 @@
 <!doctype html>
 <html lang="en" ng-app="myApp">
-<head>
-  <meta charset="utf-8">
-  <title>My AngularJS App</title>
-  <link rel="stylesheet" href="css/app.css"/>
-  <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
-</head>
-<body ng-controller="PhoneListCtrl">
-  <ul class="menu">
-    <li><a href="#/view1">view1</a></li>
-    <li><a href="#/view2">view2</a></li>
-    <li><a href="#/login">login</a></li>
-    <li><a href="#/dashboard">dashboard</a></li>
-  </ul>
-
-  <div ng-view></div>
-  <div id="mainTestContent">
-      <h3>This is for image upload</h3>
-      <form action="comp/file/upload" method="post" enctype="multipart/form-data">
-          <p>
-              Select a file : <input type="file" name="file" multiple="multiple" size="45" />
-          </p>
-          <input type="submit" value="Upload It" />
-      </form>
-
-      <h3>This is for test cross domain restful API call.</h3>
-      <button ng-click="callIt()">Call Restful (Cross domain)</button>
-      <h3>This is for data binding</h3>
-      Your name: <input type="text" ng-model="status" placeholder="World"><br>
-      Hello {{status || 'World'}}!
-      <div>Angular seed app: v<span app-version></span></div>
-
-      <hr>
-      <h3>This is for ng-repeat</h3>
-      <input type="text" ng-model="query">
-      <ul>
-        <li ng-repeat="phone in phones | filter:query">
-          {{phone.name}}
-          <p>{{phone.snippet}}</p>
-        </li>
-      </ul>
-      <hr>
-
-      <h3>This is for RESTful solr request</h3>
-      <div>
-        <input type="text" ng-model="searchStr">
-        <button ng-click="search()">Search</button>
-        <br>
-        <input type="text" ng-model="docToAdd">
-        <button ng-click="addDoc()">AddDocToSolr</button>
-        <ul>
-          <li ng-repeat="doc in docs">
-            {{doc.id}} -- {{doc.title}}
-          </li>
+    <head>
+        <meta charset="utf-8">
+        <title>My AngularJS App</title>
+        <link rel="stylesheet" href="css/app.css"/>
+        <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    </head>
+    <body ng-controller="PhoneListCtrl">
+        <!--
+        <ul class="menu">
+            <li><a href="#/view1">view1</a></li>
+            <li><a href="#/view2">view2</a></li>
+            <li><a href="#/login">login</a></li>
+            <li><a href="#/dashboard">dashboard</a></li>
         </ul>
-      </div>
-      <hr>
-    <div>
-      <label for="inputImage">Image</label>
-      <input id="inputImage" type="file" accept="image/*" image="image"/>
-    </div>
+        <div ng-view></div>
+        -->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Project name</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Settings</a></li>
+                        <li><a href="#">Profile</a></li>
+                        <li><a href="#">Help</a></li>
+                    </ul>
+                    <form class="navbar-form navbar-right">
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </form>
+                </div>
+            </div>
+        </nav>
 
-  </div>
-  <!-- In production use:
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
-  -->
-  <script src="lib/angular/angular.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/services.js"></script>
-  <script src="js/controllers.js"></script>
-  <script src="js/filters.js"></script>
-  <script src="js/directives.js"></script>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="lib/jquery/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="lib/bootstrap/js/bootstrap.min.js"></script>
-  <script src="lib/md5/md5.js"></script>
-</body>
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">Reports</a></li>
+                    <li><a href="#">Analytics</a></li>
+                    <li><a href="#">Export</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-offset-3 col-md-offset-2 main">
+                <h1 class="page-header">Dashboard</h1>
+
+                <div class="row placeholders">
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                    <div class="col-xs-6 col-sm-3 placeholder">
+                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
+                        <h4>Label</h4>
+                        <span class="text-muted">Something else</span>
+                    </div>
+                </div>
+
+                <h2 class="sub-header">Section title</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Header</th>
+                            <th>Header</th>
+                            <th>Header</th>
+                            <th>Header</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>1,001</td>
+                            <td>Lorem</td>
+                            <td>ipsum</td>
+                            <td>dolor</td>
+                            <td>sit</td>
+                        </tr>
+                        <tr>
+                            <td>1,002</td>
+                            <td>amet</td>
+                            <td>consectetur</td>
+                            <td>adipiscing</td>
+                            <td>elit</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="mainTestContent">
+            <h3>This is for image upload</h3>
+            <form action="comp/file/upload" method="post" enctype="multipart/form-data">
+                <p>
+                  Select a file : <input type="file" name="file" multiple="multiple" size="45" />
+                </p>
+                <input type="submit" value="Upload It" />
+            </form>
+
+            <h3>This is for test cross domain restful API call.</h3>
+            <button ng-click="callIt()">Call Restful (Cross domain)</button>
+            <h3>This is for data binding</h3>
+            Your name: <input type="text" ng-model="status" placeholder="World"><br>
+            Hello {{status || 'World'}}!
+            <div>Angular seed app: v<span app-version></span></div>
+
+            <hr>
+            <h3>This is for ng-repeat</h3>
+            <input type="text" ng-model="query">
+            <ul>
+                <li ng-repeat="phone in phones | filter:query">{{phone.name}}
+                    <p>{{phone.snippet}}</p>
+                </li>
+            </ul>
+            <hr>
+
+            <h3>This is for RESTful solr request</h3>
+            <div>
+                <input type="text" ng-model="searchStr">
+                <button ng-click="search()">Search</button>
+                <br>
+                <input type="text" ng-model="docToAdd">
+                <button ng-click="addDoc()">AddDocToSolr</button>
+                <ul>
+                    <li ng-repeat="doc in docs">{{doc.id}} -- {{doc.title}}</li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+              <label for="inputImage">Image</label>
+              <input id="inputImage" type="file" accept="image/*" image="image"/>
+            </div>
+        </div>
+        <!-- In production use:
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        -->
+        <script src="lib/angular/angular.js"></script>
+        <script src="js/app.js"></script>
+        <script src="js/services.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/filters.js"></script>
+        <script src="js/directives.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="lib/jquery/jquery.min.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+        <script src="lib/md5/md5.js"></script>
+    </body>
 </html>
