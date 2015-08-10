@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" ng-app="myApp">
     <head>
-        <meta charset="utf-8">
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
         <title>My AngularJS App</title>
         <link rel="stylesheet" href="css/app.css"/>
         <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -19,7 +19,7 @@
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <button type="button" class="btn-primary navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
@@ -41,122 +41,63 @@
             </div>
         </nav>
 
-        <div class="row">
-            <div class="col-sm-3 col-md-2 sidebar">
-                <ul class="nav nav-sidebar">
-                    <li class="active"><a href="#">Overview <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">Reports</a></li>
-                    <li><a href="#">Analytics</a></li>
-                    <li><a href="#">Export</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-offset-3 col-md-offset-2 main">
-                <h1 class="page-header">Dashboard</h1>
-
-                <div class="row placeholders">
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive" alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive" alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                </div>
-
-                <h2 class="sub-header">Section title</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Header</th>
-                            <th>Header</th>
-                            <th>Header</th>
-                            <th>Header</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>1,001</td>
-                            <td>Lorem</td>
-                            <td>ipsum</td>
-                            <td>dolor</td>
-                            <td>sit</td>
-                        </tr>
-                        <tr>
-                            <td>1,002</td>
-                            <td>amet</td>
-                            <td>consectetur</td>
-                            <td>adipiscing</td>
-                            <td>elit</td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div class="container-fluid">
+            <div class="row">
+                <div ng-repeat="image in images">
+                    <img src={{image}} alt="..." class="col-md-4 img-rounded img-responsive">
                 </div>
             </div>
         </div>
 
-        <div id="mainTestContent">
-            <h3>This is for image upload</h3>
-            <form action="comp/file/upload" method="post" enctype="multipart/form-data">
-                <p>
-                  Select a file : <input type="file" name="file" multiple="multiple" size="45" />
-                </p>
-                <input type="submit" value="Upload It" />
-            </form>
-            <button ng-click="listFiles()">list images</button>
-            <ul>
-                <li ng-repeat="image in images">
-                    <p>{{image}}</p>
-                </li>
-            </ul>
 
-            <h3>This is for test cross domain restful API call.</h3>
-            <button ng-click="callIt()">Call Restful (Cross domain)</button>
-            <h3>This is for data binding</h3>
-            Your name: <input type="text" ng-model="status" placeholder="World"><br>
-            Hello {{status || 'World'}}!
-            <div>Angular seed app: v<span app-version></span></div>
+        <div id="mainTestContent" class="container-fluid">
+            <div class="row">
+                <div class="col-md-4">
+                    <h3>This is for image upload</h3>
+                    <form action="comp/file/upload" method="post" enctype="multipart/form-data">
+                        <p>
+                            Select a file : <input type="file" name="file" multiple="multiple" size="45" />
+                        </p>
+                        <input type="submit"  class="btn-primary" value="Upload It" />
+                    </form>
+                    <button ng-click="listFiles()" class="btn-primary">list images</button>
+                </div>
 
-            <hr>
-            <h3>This is for ng-repeat</h3>
-            <input type="text" ng-model="query">
-            <ul>
-                <li ng-repeat="phone in phones | filter:query">{{phone.name}}
-                    <p>{{phone.snippet}}</p>
-                </li>
-            </ul>
-            <hr>
+                <div class="col-md-4">
+                    <h3>This is for test cross domain restful API call.</h3>
+                    <button ng-click="callIt()" class="btn-primary">Call Restful (Cross domain)</button>
+                    <h3>This is for data binding</h3>
+                    Your name: <input type="text" ng-model="status" placeholder="World"><br>
+                    Hello {{status || 'World'}}!
+                    <div>Angular seed app: v<span app-version></span></div>
+                </div>
 
-            <h3>This is for RESTful solr request</h3>
-            <div>
-                <input type="text" ng-model="searchStr">
-                <button ng-click="search()">Search</button>
-                <br>
-                <input type="text" ng-model="docToAdd">
-                <button ng-click="addDoc()">AddDocToSolr</button>
-                <ul>
-                    <li ng-repeat="doc in docs">{{doc.id}} -- {{doc.title}}</li>
-                </ul>
+                <div class="col-md-4">
+                    <h3>This is for ng-repeat</h3>
+                    <input type="text" ng-model="query">
+                    <ul>
+                        <li ng-repeat="phone in phones | filter:query">{{phone.name}}
+                            <p>{{phone.snippet}}</p>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h3>This is for RESTful solr request</h3>
+                    <div>
+                        <input type="text" ng-model="searchStr">
+                        <button ng-click="search()" class="btn-primary">Search</button>
+                        <br>
+                        <input type="text" ng-model="docToAdd">
+                        <button ng-click="addDoc()" class="btn-primary">AddDocToSolr</button>
+                        <ul>
+                            <li ng-repeat="doc in docs">{{doc.id}} -- {{doc.title}}</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
+
+
             <hr>
-            <div>
-              <label for="inputImage">Image</label>
-              <input id="inputImage" type="file" accept="image/*" image="image"/>
-            </div>
         </div>
         <!-- In production use:
         <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
