@@ -7,9 +7,9 @@ function MyCtrl1() {}
 function MyCtrl2() {}
 
 function Login($scope, $http) {
-    $scope.register = function() {
+    $scope.login = function() {
         if ($scope.user.email !== undefined && $scope.password !== undefined) {
-            $http.post('../comp/user/register', {email : $scope.user.email, password : md5($scope.password)}).
+            $http.post('../comp/user/login', {email : $scope.user.email, password : md5($scope.password)}).
                 success(function(data, status, headers, config) {
                 }).
                 error(function(data, status, headers, config) {
@@ -17,6 +17,32 @@ function Login($scope, $http) {
                 });
         }
     }
+
+    // Initialization
+    $scope.init = function () {
+        $("#loginForm").submit(function() {
+            var url = "comp/user/login";
+            var $loginForm = $('#loginForm');
+            var oldValue = $loginForm.find('input[name="password"]').val();
+            $loginForm.find('input[name="password"]').val(md5(oldValue));
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $("#loginForm").serialize(), // serializes the form's elements.
+                contentType: false,
+                processData: false,
+                success: function(data)
+                {
+                    alert(data);
+                },
+                error: function (returndata) {
+                    alert("login fail")
+                }
+            });
+
+            return false; // avoid to execute the actual submit of the form.
+        });
+    };
 }
 
 function Dashboard() {}
