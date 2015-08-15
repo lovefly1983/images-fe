@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="css/app.css"/>
         <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
     </head>
-    <body ng-controller="PhoneListCtrl">
+    <body ng-controller="ImagesCtrl" data-ng-init="init()">
         <nav class="navbar navbar-inverse navbar-fixed-top">
             <div class="container-fluid">
                 <div class="navbar-header">
@@ -40,11 +40,10 @@
             </div>
         </div>
 
-
         <div class="container-fluid">
             <div class="row">
-                <div ng-repeat="image in images" class="overlay img-thumbnail col-md-3 img-rounded img-responsive gallery-item">
-                    <img src={{image}} alt="abc"/>
+                <div  ng-repeat="image in images" class="overlay img-thumbnail col-md-3 img-rounded img-responsive gallery-item">
+                    <img src={{image}}>
                 </div>
             </div>
         </div>
@@ -54,14 +53,15 @@
             <div class="row">
                 <div class="col-md-4">
                     <h3>This is for image upload</h3>
-                    <form action="comp/file/upload" method="post" enctype="multipart/form-data"  class="form-inline">
+                    <form id="uploadFilesForm" method="post" enctype="multipart/form-data" target="_self" class="form-inline">
                         <div class="form-group">
                             <label>Select a file :</label>
                             <input type="file" class="form-control" name="file" multiple="multiple" />
                         </div>
-                        <button type="submit"  class="btn-primary">Upload</button>
+                        <input type="submit"  class="btn-primary" value="Upload"/>
                     </form>
-                    <button ng-click="listFiles()" class="btn btn-primary" style="margin-top:30px">list images</button>
+
+                    <button ng-hide="true" ng-click="listFiles()" class="btn btn-primary" style="margin-top:30px">list images</button>
                 </div>
 
                 <div class="col-md-4">
