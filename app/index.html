@@ -1,7 +1,9 @@
 <!doctype html>
 <html lang="en" ng-app="myApp">
     <head>
-        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>My AngularJS App</title>
         <link rel="stylesheet" href="css/app.css"/>
         <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -60,7 +62,7 @@
 
             <div class="container-fluid">
                 <div class="row">
-                    <div  ng-repeat="image in images" class="overlay img-thumbnail col-sm-4 col-md-3 img-rounded img-responsive gallery-item">
+                    <div  ng-repeat="image in images" class="overlay img-thumbnail col-xs-6 col-sm-4 col-md-3 img-rounded img-responsive gallery-item">
                         <img src={{image}}>
                     </div>
                 </div>
@@ -74,7 +76,7 @@
                         <form id="uploadFilesForm" method="post" enctype="multipart/form-data" target="_self" class="form-inline">
                             <div class="form-group">
                                 <label>Select a file :</label>
-                                <input type="file" class="form-control" name="file" multiple="multiple" />
+                                <input id="files" type="file" class="form-control" name="file" multiple="multiple" />
                             </div>
                             <input type="submit"  class="btn-primary" value="Upload"/>
                         </form>
@@ -82,7 +84,7 @@
                         <button ng-hide="true" ng-click="listFiles()" class="btn btn-primary" style="margin-top:30px">list images</button>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-md-4" ng-hide="true">
                         <h3>This is for filter</h3>
                         <input type="text" ng-model="query" class="form-group">
                         <ul>
@@ -91,7 +93,7 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-4" ng-hide="true">
                         <h3>This is for RESTful solr request</h3>
                         <div >
                             <div class="form-group">
@@ -123,7 +125,7 @@
         <script src="js/directives.js"></script>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="lib/jquery/jquery.min.js"></script>
-        <script src="lib/jquery/jquery.cookie.js"/>
+        <script src="lib/jquery/jquery.cookie.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="lib/bootstrap/js/bootstrap.min.js"></script>
         <script src="lib/md5/md5.js"></script>
