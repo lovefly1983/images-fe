@@ -28,7 +28,24 @@
                         </div>
                         <button type="submit" class="btn btn-success">Sign in</button>
                     </form>
-                </div><!--/.navbar-collapse -->
+
+                    <ul id="navBar-right" class="nav navbar-nav navbar-right hidden">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" style="margin-bottom:-5px" data-toggle="dropdown">
+                                lovefly1983
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Profile</a></li>
+                                <li><a href="#">My Subscription</a></li>
+                                <li><a href="#">Change Password</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#">Sign out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!--/.navbar-collapse -->
             </div>
         </nav>
 
@@ -43,7 +60,7 @@
 
             <div class="container-fluid">
                 <div class="row">
-                    <div  ng-repeat="image in images" class="overlay img-thumbnail col-md-3 img-rounded img-responsive gallery-item">
+                    <div  ng-repeat="image in images" class="overlay img-thumbnail col-sm-4 col-md-3 img-rounded img-responsive gallery-item">
                         <img src={{image}}>
                     </div>
                 </div>
@@ -106,6 +123,7 @@
         <script src="js/directives.js"></script>
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="lib/jquery/jquery.min.js"></script>
+        <script src="lib/jquery/jquery.cookie.js"/>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="lib/bootstrap/js/bootstrap.min.js"></script>
         <script src="lib/md5/md5.js"></script>

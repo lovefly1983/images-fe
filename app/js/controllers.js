@@ -6,10 +6,17 @@
 function MyCtrl1() {}
 function MyCtrl2() {}
 
+/**
+ * Login controller
+ *
+ * @param $scope
+ * @param $http
+ * @constructor
+ */
 function Login($scope, $http) {
-    $scope.login = function() {
+    $scope.register = function() {
         if ($scope.user.email !== undefined && $scope.password !== undefined) {
-            $http.post('../comp/user/login', {email : $scope.user.email, password : md5($scope.password)}).
+            $http.post('../comp/user/register', {email : $scope.user.email, password : md5($scope.password)}).
                 success(function(data, status, headers, config) {
                 }).
                 error(function(data, status, headers, config) {
@@ -23,6 +30,7 @@ function Login($scope, $http) {
         $("#loginForm").submit(function() {
             var url = "comp/user/login";
             var $loginForm = $('#loginForm');
+
             var oldValue = $loginForm.find('input[name="password"]').val();
             $loginForm.find('input[name="password"]').val(md5(oldValue));
             $.ajax({
@@ -31,22 +39,39 @@ function Login($scope, $http) {
                 data: $("#loginForm").serialize(), // serializes the form's elements.
                 contentType: false,
                 processData: false,
-                success: function(data)
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data, status, xhr)
                 {
-                    alert(data);
+                    $('#loginForm').hide();
+                    $('#navBar-right').removeClass("hidden");
+                    $('#navBar-right').show();
+                    // Currently with ajax post, even though we can get "Set-Cookie" in the response header
+                    // but the cookie is not set by the browser.
+                    // TODO: resolve it later and currently we set the cookied manually with a json response.
+                    $.cookie('userId', data.userId.toString());
                 },
                 error: function (returndata) {
-                    alert("login fail")
+                    $('#loginForm').show();
+                    $('#navBar-right').hide();
                 }
             });
-
             return false; // avoid to execute the actual submit of the form.
         });
+        $('#navBar-right').hide();
     };
 }
 
 function Dashboard() {}
 
+/**
+ * Images controller.
+ *
+ * @param $scope
+ * @param $http
+ * @constructor
+ */
 function ImagesCtrl($scope, $http) {
     $scope.phones = [
         {"name": "Nexus S",
