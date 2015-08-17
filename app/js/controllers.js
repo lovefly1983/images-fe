@@ -140,11 +140,30 @@ function ImagesCtrl($scope, $http) {
                 for (var i = 0; i < fileCount; i++) {
                     if (!checkFile(fileList[i])) {
                         return;
+                    } else {
+                        // image preview
+                        var reader = new FileReader(), htmlImage;
+                        reader.onload = function(e) {
+                            htmlImage = '<img src="'+ e.target.result +'" />';
+                            /*
+                             var img_w = $(this).width();
+                             var img_h = $(this).height();
+                             if(img_w>w){
+                             var height = (w*img_h)/img_w;
+                             $(this).css({"width":w,"height":height});
+                             }
+                             */
+                            $('#imagePreview').attr("src", e.target.result);
+                        }
+                        reader.readAsDataURL(fileList[i]);
                     }
                 }
             } else {
                 alert('upgrade browser firstly!!!');
             }
+
+
+
             // do the upload
             var formData = new FormData($("#uploadFilesForm")[0]);
             var url = "comp/file/upload";
@@ -185,3 +204,4 @@ function checkFile(file) {
 
     return true;
 }
+
