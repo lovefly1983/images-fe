@@ -1,8 +1,10 @@
 'use strict';
 
+/* Namespace */
+var ImageApp = ImageApp || {};
+ImageApp.utils = ImageApp.utils || {}; 
+
 /* Controllers */
-
-
 function MyCtrl1() {}
 function MyCtrl2() {}
 
@@ -25,6 +27,12 @@ function Login($scope, $http) {
         }
     }
 
+    $scope.logout = function() {
+        ImageApp.utils.logout();
+        $.cookie('userId', '', { expires: -1 });
+    }
+
+
     // Initialization
     $scope.init = function () {
         $("#loginForm").submit(function() {
@@ -45,12 +53,10 @@ function Login($scope, $http) {
                 success: function(data, status, xhr)
                 {
                     if (data.userId !== -1) {
-                        $('#loginForm').hide();
-                        $('#navBar-right').removeClass("hidden");
-                        $('#navBar-right').show();
+                        ImageApp.utils.login();
                         // Currently with ajax post, even though we can get "Set-Cookie" in the response header
                         // but the cookie is not set by the browser.
-                        // TODO: resolve it later and currently we set the cookied manually with a json response.
+                        // TODO: resolve it later and currently we set the cookie manually with a json response.
                         $.cookie('userId', data.userId.toString());
                     } else {
                         alert("login fails !!!")
@@ -129,41 +135,49 @@ function ImagesCtrl($scope, $http) {
     // Initialization
     $scope.init = function () {
         $scope.listFiles();
+        if (ImageApp.utils.isLogined()) {
+            ImageApp.utils.login();
+        }
         $("#uploadFilesForm").submit(function() {
             // $("#uploadFilesForm").serialize() could not serialize the file so we have to
             // use FormData which is available in most main stream browser (IE 10+ ...)
-//            var img = new Image();
-//            img.src = $('#files').val();
-            if (window.File && window.FileList) {
-                var fileList = $('#files').get(0).files;
-                var fileCount =  fileList.length;
-                for (var i = 0; i < fileCount; i++) {
-                    if (!checkFile(fileList[i])) {
+            if (ImageApp.utils.isLogined()) {
+                if (window.File && window.FileList) {
+                    var fileList = $('#files').get(0).files;
+                    var fileCount =  fileList.length;
+                    if (fileCount == 0) {
+                        alert("please choose a file firstly!!!");
                         return;
-                    } else {
-                        // image preview
-                        var reader = new FileReader(), htmlImage;
-                        reader.onload = function(e) {
-                            htmlImage = '<img src="'+ e.target.result +'" />';
-                            /*
-                             var img_w = $(this).width();
-                             var img_h = $(this).height();
-                             if(img_w>w){
-                             var height = (w*img_h)/img_w;
-                             $(this).css({"width":w,"height":height});
-                             }
-                             */
-                            $('#imagePreview').attr("src", e.target.result);
-                        }
-                        reader.readAsDataURL(fileList[i]);
                     }
+                    for (var i = 0; i < fileCount; i++) {
+                        if (!ImageApp.utils.checkFile(fileList[i])) {
+                            return;
+                        } else {
+                            // image preview
+                            var reader = new FileReader(), htmlImage;
+                            reader.onload = function(e) {
+                                //htmlImage = '<img src="'+ e.target.result +'" />';
+                                /*
+                                 var img_w = $(this).width();
+                                 var img_h = $(this).height();
+                                 if(img_w>w){
+                                 var height = (w*img_h)/img_w;
+                                 $(this).css({"width":w,"height":height});
+                                 }
+                                 */
+                                //$('#imagePreview').attr("src", e.target.result);
+                            }
+                            reader.readAsDataURL(fileList[i]);
+                        }
+                    }
+                } else {
+                    alert('upgrade browser firstly!!!');
+                    return;
                 }
             } else {
-                alert('upgrade browser firstly!!!');
+                alert("not logined yet!!!")
+                return;
             }
-
-
-
             // do the upload
             var formData = new FormData($("#uploadFilesForm")[0]);
             var url = "comp/file/upload";
@@ -192,7 +206,7 @@ function ImagesCtrl($scope, $http) {
  * @param file
  * @returns {boolean}
  */
-function checkFile(file) {
+ImageApp.utils.checkFile = function(file) {
     if (!/\.(gif|jpg|jpeg|png)$/i.test(file.name)) {
         return false;
     }
@@ -205,3 +219,17 @@ function checkFile(file) {
     return true;
 }
 
+ImageApp.utils.isLogined = function() {
+    return ($.cookie('userId') !== null && $.cookie('userId') > 0);
+}
+
+ImageApp.utils.login = function() {
+    $('#loginForm').hide();
+    $('#navBar-right').removeClass("hidden");
+    $('#navBar-right').show();
+}
+
+ImageApp.utils.logout = function() {
+    $('#loginForm').show();
+    $('#navBar-right').hide();
+}
