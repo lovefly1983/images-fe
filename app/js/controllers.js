@@ -211,8 +211,8 @@ ImageApp.utils.checkFile = function(file) {
         return false;
     }
     // larger than 3M
-    if (file.size >= 3*1024*1024) {
-        alert("file is more than 1M");
+    if (file.size >= 5*1024*1024) {
+        alert("file is more than 5M");
         return false;
     }
 
