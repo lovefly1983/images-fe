@@ -1,12 +1,59 @@
 'use strict';
 
-/* Namespace */
-var ImageApp = ImageApp || {};
-ImageApp.utils = ImageApp.utils || {}; 
-
 /* Controllers */
 function MyCtrl1() {}
 function MyCtrl2() {}
+
+(function () {
+    function namespace(namespaceString) {
+        var parts = namespaceString.split('.'),
+            parent = window,
+            currentPart = '';
+
+        for(var i = 0, length = parts.length; i < length; i++) {
+            currentPart = parts[i];
+            parent[currentPart] = parent[currentPart] || {};
+            parent = parent[currentPart];
+        }
+
+        return parent;
+    }
+    namespace("ImageApp.utils");
+
+    ImageApp.utils.isLogined = function() {
+        return ($.cookie('userId') !== null && $.cookie('userId') > 0);
+    }
+
+    ImageApp.utils.login = function() {
+        $('#loginForm').hide();
+        $('#navBar-right').removeClass("hidden");
+        $('#navBar-right').show();
+    }
+
+    ImageApp.utils.logout = function() {
+        $('#loginForm').show();
+        $('#navBar-right').hide();
+    }
+
+    /**
+     * Check file size & format.
+     *
+     * @param file
+     * @returns {boolean}
+     */
+    ImageApp.utils.checkFile = function(file) {
+        if (!/\.(gif|jpg|jpeg|png)$/i.test(file.name)) {
+            return false;
+        }
+        // larger than 3M
+        if (file.size >= 5*1024*1024) {
+            alert("file is more than 5M");
+            return false;
+        }
+
+        return true;
+    }
+})();
 
 /**
  * Login controller
@@ -152,22 +199,6 @@ function ImagesCtrl($scope, $http) {
                     for (var i = 0; i < fileCount; i++) {
                         if (!ImageApp.utils.checkFile(fileList[i])) {
                             return;
-                        } else {
-                            // image preview
-                            var reader = new FileReader(), htmlImage;
-                            reader.onload = function(e) {
-                                //htmlImage = '<img src="'+ e.target.result +'" />';
-                                /*
-                                 var img_w = $(this).width();
-                                 var img_h = $(this).height();
-                                 if(img_w>w){
-                                 var height = (w*img_h)/img_w;
-                                 $(this).css({"width":w,"height":height});
-                                 }
-                                 */
-                                //$('#imagePreview').attr("src", e.target.result);
-                            }
-                            reader.readAsDataURL(fileList[i]);
                         }
                     }
                 } else {
@@ -179,57 +210,134 @@ function ImagesCtrl($scope, $http) {
                 return;
             }
             // do the upload
-            var formData = new FormData($("#uploadFilesForm")[0]);
-            var url = "comp/file/upload";
-            $.ajax({
-                type: "POST",
-                url: url,
-                data: formData, // serializes the form's elements.
-                contentType: false,
-                processData: false,
-                success: function(data)
-                {
-                    $scope.listFiles(); // refresh the page
-                },
-                error: function (data) {
-                    alert("upload file fails")
-                }
-            });
+            uploadPreview(fileList);
+            //uploadRawImages($scope);
+
             return false; // avoid to execute the actual submit of the form.
         });
     };
-}
 
-/**
- * Check file size & format.
- *
- * @param file
- * @returns {boolean}
- */
-ImageApp.utils.checkFile = function(file) {
-    if (!/\.(gif|jpg|jpeg|png)$/i.test(file.name)) {
-        return false;
+    /* Upload the raw image */
+    var uploadRawImages = function($scope) {
+        // do the upload
+        var formData = new FormData($("#uploadFilesForm")[0]);
+        var url = "comp/file/upload";
+        $.ajax({
+            type: "POST",
+            url: url,
+            data: formData, // serializes the form's elements.
+            contentType: false,
+            processData: false,
+            success: function(data)
+            {
+                $scope.listFiles(); // refresh the page
+            },
+            error: function (data) {
+                alert("upload file fails")
+            }
+        });
     }
-    // larger than 3M
-    if (file.size >= 5*1024*1024) {
-        alert("file is more than 5M");
-        return false;
+
+    /* Update Preview images */
+    var uploadPreview = function(files){
+        var url = "comp/file/upload";
+        for (var i = 0; i < files.length; i++) {
+            // Ensure it's an image
+            if(files[i].type.match(/image.*/)) {
+                console.log('An image has been loaded');
+                // Load the image
+                var reader = new FileReader();
+                reader.filename = files[0].name;
+
+                reader.onload = function (readerEvent) {
+                    var image = new Image();
+                    var filename = readerEvent.target.filename;
+                    image.onload = function (imageEvent) {
+                        // Resize the image
+                        var canvas = document.createElement('canvas'),
+                            max_size = 544,// TODO : pull max size from a site config
+                            width = image.width,
+                            height = image.height;
+                        if (width > height) {
+                            if (width > max_size) {
+                                height *= max_size / width;
+                                width = max_size;
+                            }
+                        } else {
+                            if (height > max_size) {
+                                width *= max_size / height;
+                                height = max_size;
+                            }
+                        }
+                        canvas.width = width;
+                        canvas.height = height;
+                        canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+                        var dataUrl = canvas.toDataURL('image/jpeg');
+                        var resizedImage = dataURLToBlob(dataUrl);
+                        $.event.trigger({
+                            type: "imageResized",
+                            blob: resizedImage,
+                            filename: filename,
+                            url: url
+                        });
+                    }
+                    image.src = readerEvent.target.result;
+                }
+                reader.readAsDataURL(files[i]);
+            }
+        }
+    };
+
+    /* Utility function to convert a canvas to a BLOB */
+    var dataURLToBlob = function(dataURL) {
+        var BASE64_MARKER = ';base64,';
+        if (dataURL.indexOf(BASE64_MARKER) == -1) {
+            var parts = dataURL.split(',');
+            var contentType = parts[0].split(':')[1];
+            var raw = parts[1];
+
+            return new Blob([raw], {type: contentType});
+        }
+
+        var parts = dataURL.split(BASE64_MARKER);
+        var contentType = parts[0].split(':')[1];
+        var raw = window.atob(parts[1]);
+        var rawLength = raw.length;
+
+        var uInt8Array = new Uint8Array(rawLength);
+
+        for (var i = 0; i < rawLength; ++i) {
+            uInt8Array[i] = raw.charCodeAt(i);
+        }
+
+        return new Blob([uInt8Array], {type: contentType});
     }
 
-    return true;
+    /**
+     *
+     */
+    $(document).on("imageResized", function (event) {
+        // The raw image is not sent out
+        //var data = new FormData($("#uploadFilesForm")[0]);
+        var data = new FormData();
+        if (event.blob && event.url) {
+            data.append('image_data', event.blob, event.filename);
+
+            $.ajax({
+                url: event.url,
+                data: data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    $scope.listFiles(); // refresh the page
+                },
+                error: function (data) {
+                    alert("fail");
+                }
+            });
+        }
+    });
 }
 
-ImageApp.utils.isLogined = function() {
-    return ($.cookie('userId') !== null && $.cookie('userId') > 0);
-}
-
-ImageApp.utils.login = function() {
-    $('#loginForm').hide();
-    $('#navBar-right').removeClass("hidden");
-    $('#navBar-right').show();
-}
-
-ImageApp.utils.logout = function() {
-    $('#loginForm').show();
-    $('#navBar-right').hide();
-}
