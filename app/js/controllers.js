@@ -247,11 +247,10 @@ function ImagesCtrl($scope, $http) {
                 console.log('An image has been loaded');
                 // Load the image
                 var reader = new FileReader();
-                reader.filename = files[0].name;
+                reader.filename = files[i].name;
 
                 reader.onload = function (readerEvent) {
                     var image = new Image();
-                    var filename = readerEvent.target.filename;
                     image.onload = function (imageEvent) {
                         // Resize the image
                         var canvas = document.createElement('canvas'),
@@ -274,12 +273,15 @@ function ImagesCtrl($scope, $http) {
                         canvas.getContext('2d').drawImage(image, 0, 0, width, height);
                         var dataUrl = canvas.toDataURL('image/jpeg');
                         var resizedImage = dataURLToBlob(dataUrl);
-                        $.event.trigger({
+                        var data = {
                             type: "imageResized",
                             blob: resizedImage,
-                            filename: filename,
+                            filename: readerEvent.target.filename,
                             url: url
-                        });
+                        };
+                        //$.event.trigger(data);
+                        // TODO: use angularjs style
+                        $scope.$broadcast('imageResized', data);
                     }
                     image.src = readerEvent.target.result;
                 }
@@ -314,7 +316,7 @@ function ImagesCtrl($scope, $http) {
     }
 
     /**
-     *
+     * Jquery style
      */
     $(document).on("imageResized", function (event) {
         // The raw image is not sent out
@@ -339,5 +341,33 @@ function ImagesCtrl($scope, $http) {
             });
         }
     });
+
+    /**
+     * Angularjs style
+     */
+    $scope.$on('imageResized', function (event, data) {
+        console.log("imageResized triggered.")
+        // The raw image is not sent out
+        //var data = new FormData($("#uploadFilesForm")[0]);
+        var formData = new FormData();
+        if (data.blob && data.url) {
+            formData.append('image_data', data.blob, data.filename);
+
+            $.ajax({
+                url: data.url,
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                success: function(data){
+                    $scope.listFiles(); // refresh the page
+                },
+                error: function (data) {
+                    alert("fail");
+                }
+            });
+        }
+    })
 }
 
