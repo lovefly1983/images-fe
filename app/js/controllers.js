@@ -241,16 +241,21 @@ function ImagesCtrl($scope, $http) {
     /* Update Preview images */
     var uploadPreview = function(files){
         var url = "comp/file/upload";
+
+        var data = {};
+        data.files = [];
+        data.fileCount = files.length;
+
         for (var i = 0; i < files.length; i++) {
             // Ensure it's an image
             if(files[i].type.match(/image.*/)) {
-                console.log('An image has been loaded');
                 // Load the image
                 var reader = new FileReader();
                 reader.filename = files[i].name;
 
                 reader.onload = function (readerEvent) {
                     var image = new Image();
+                    var reader = readerEvent.target;
                     image.onload = function (imageEvent) {
                         // Resize the image
                         var canvas = document.createElement('canvas'),
@@ -273,15 +278,17 @@ function ImagesCtrl($scope, $http) {
                         canvas.getContext('2d').drawImage(image, 0, 0, width, height);
                         var dataUrl = canvas.toDataURL('image/jpeg');
                         var resizedImage = dataURLToBlob(dataUrl);
-                        var data = {
-                            type: "imageResized",
+                        var file = {
                             blob: resizedImage,
-                            filename: readerEvent.target.filename,
-                            url: url
+                            filename: reader.filename
                         };
-                        //$.event.trigger(data);
-                        // TODO: use angularjs style
-                        $scope.$broadcast('imageResized', data);
+                        data.files.push(file);
+                        data.url = url;
+
+                        if (data.files.length == data.fileCount) {
+                            //$.event.trigger(data);
+                            $scope.$broadcast('imagesResized', data);
+                        }
                     }
                     image.src = readerEvent.target.result;
                 }
@@ -345,29 +352,29 @@ function ImagesCtrl($scope, $http) {
     /**
      * Angularjs style
      */
-    $scope.$on('imageResized', function (event, data) {
-        console.log("imageResized triggered.")
+    $scope.$on('imagesResized', function (event, data) {
         // The raw image is not sent out
         //var data = new FormData($("#uploadFilesForm")[0]);
         var formData = new FormData();
-        if (data.blob && data.url) {
-            formData.append('image_data', data.blob, data.filename);
-
-            $.ajax({
-                url: data.url,
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                type: 'POST',
-                success: function(data){
-                    $scope.listFiles(); // refresh the page
-                },
-                error: function (data) {
-                    alert("fail");
-                }
-            });
+        for (var i = 0; i < data.files.length; i++) {
+            var file = data.files[i];
+            formData.append('image_data_' + i, file.blob, file.filename);
         }
+
+        $.ajax({
+            url: data.url,
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            type: 'POST',
+            success: function(data){
+                $scope.listFiles(); // refresh the page
+            },
+            error: function (data) {
+                alert("fail");
+            }
+        });
     })
 }
 
