@@ -1,9 +1,6 @@
 'use strict';
 
-/* Controllers */
-function MyCtrl1() {}
-function MyCtrl2() {}
-
+/* Register the utility functions under ImageApp.utils namespace */
 (function () {
     function namespace(namespaceString) {
         var parts = namespaceString.split('.'),
@@ -50,9 +47,14 @@ function MyCtrl2() {}
             alert("file is more than 5M");
             return false;
         }
-
         return true;
     }
+
+    ImageApp.utils.resetCookie = function() {
+        $.cookie('userId', '', { expires: -1 });
+        $.cookie('userName', '', { expires: -1 });
+    }
+
 })();
 
 /**
@@ -63,28 +65,20 @@ function MyCtrl2() {}
  * @constructor
  */
 function Login($scope, $http) {
-    $scope.register = function() {
-        if ($scope.user.email !== undefined && $scope.password !== undefined) {
-            $http.post('../comp/user/register', {email : $scope.user.email, password : md5($scope.password)}).
-                success(function(data, status, headers, config) {
-                }).
-                error(function(data, status, headers, config) {
-                    alert("fail " +  $scope.user.email + " password: " + md5($scope.password));
-                });
-        }
-    }
-
     $scope.logout = function() {
         ImageApp.utils.logout();
-        $.cookie('userId', '', { expires: -1 });
+        ImageApp.utils.resetCookie();
     }
-
 
     // Initialization
     $scope.init = function () {
+        if ($.cookie('userName') !== null) {
+            $scope.userName = $.cookie('userName');
+        }
+        // login
         $("#loginForm").submit(function() {
             var url = "comp/user/login";
-            var $loginForm = $('#loginForm');
+            var $loginForm = $(this);
 
             var oldValue = $loginForm.find('input[name="password"]').val();
             $loginForm.find('input[name="password"]').val(md5(oldValue));
@@ -105,6 +99,9 @@ function Login($scope, $http) {
                         // but the cookie is not set by the browser.
                         // TODO: resolve it later and currently we set the cookie manually with a json response.
                         $.cookie('userId', data.userId.toString());
+                        $.cookie('userName', data.userName);
+                        $scope.userName = data.userName;
+                        $.event.trigger("userLogin");
                     } else {
                         alert("login fails !!!")
                     }
@@ -116,11 +113,62 @@ function Login($scope, $http) {
             });
             return false; // avoid to execute the actual submit of the form.
         });
+
+
+
+        // Hide the right bar
         $('#navBar-right').hide();
     };
 }
 
-function Dashboard() {}
+function Signup($scope, $http) {
+    console.log("sdfsdfsd");
+    $scope.signup = function() {
+        if ($scope.user.name !== undefined &&
+            $scope.user.email !== undefined &&
+            $scope.password !== undefined) {
+
+            $http.post('../comp/user/signup', { name: $scope.user.name,
+                email : $scope.user.email,
+                password : md5($scope.password)}).
+                success(function(data, status, headers, config) {
+                }).
+                error(function(data, status, headers, config) {
+                    alert("fail " +  $scope.user.email + " password: " + md5($scope.password));
+                });
+        }
+    }
+
+    // Initialization
+    $scope.init = function () {
+        // Signup
+        $('#signupForm').submit(function() {
+            var url = "comp/user/signup";
+            var $signUpForm = $(this);
+
+            var oldValue = $signUpForm.find('input[name="password"]').val();
+            $signUpForm.find('input[name="password"]').val(md5(oldValue));
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: $signUpForm.serialize(), // serializes the form's elements.
+                contentType: false,
+                processData: false,
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(data, status, xhr)
+                {
+                    alert("signup");
+                },
+                error: function (data) {
+                    alert("fail");
+                }
+            });
+            return false;
+        });
+    }
+}
 
 /**
  * Images controller.
@@ -162,26 +210,9 @@ function ImagesCtrl($scope, $http) {
             });
     };
 
-    // List the image files
-    $scope.listFiles = function() {
-        $http.get('/comp/file').
-            success(function(data, status, headers, config) {
-                $scope.images = data.imageList;
-                if ($scope.images.length > 0) {
-                    $scope.showImage = true;
-                } else {
-                    $scope.showImage = false;
-                }
-            }).
-            error(function(data, status, headers, config) {
-                $scope.status = data.status;
-                $scope.showImage = false;
-            });
-    }
-
     // Initialization
     $scope.init = function () {
-        $scope.listFiles();
+        listFiles();
         if (ImageApp.utils.isLogined()) {
             ImageApp.utils.login();
         }
@@ -217,6 +248,24 @@ function ImagesCtrl($scope, $http) {
         });
     };
 
+    /* private helper functions begin */
+
+    // List the image files
+    var listFiles = function() {
+        $http.get('/comp/file', {
+            params: {
+                userId: $.cookie('userId')
+                }
+            }).
+            success(function(data, status, headers, config) {
+                $scope.images = data.imageList;
+                console.log("succeed");
+            }).
+            error(function(data, status, headers, config) {
+                console.log("fail");
+            });
+    };
+
     /* Upload the raw image */
     var uploadRawImages = function($scope) {
         // do the upload
@@ -230,7 +279,7 @@ function ImagesCtrl($scope, $http) {
             processData: false,
             success: function(data)
             {
-                $scope.listFiles(); // refresh the page
+                listFiles(); // refresh the page
             },
             error: function (data) {
                 alert("upload file fails")
@@ -322,9 +371,10 @@ function ImagesCtrl($scope, $http) {
         return new Blob([uInt8Array], {type: contentType});
     }
 
-    /**
-     * Jquery style
-     */
+    /* private helper functions end */
+
+    /* Registered event listeners begin */
+    // Jquery style
     $(document).on("imageResized", function (event) {
         // The raw image is not sent out
         //var data = new FormData($("#uploadFilesForm")[0]);
@@ -340,7 +390,7 @@ function ImagesCtrl($scope, $http) {
                 processData: false,
                 type: 'POST',
                 success: function(data){
-                    $scope.listFiles(); // refresh the page
+                    listFiles(); // refresh the page
                 },
                 error: function (data) {
                     alert("fail");
@@ -349,9 +399,11 @@ function ImagesCtrl($scope, $http) {
         }
     });
 
-    /**
-     * Angularjs style
-     */
+    $(document).on("userLogin", function(event) {
+        listFiles();
+    });
+
+    // Angularjs style
     $scope.$on('imagesResized', function (event, data) {
         // The raw image is not sent out
         //var data = new FormData($("#uploadFilesForm")[0]);
@@ -369,12 +421,13 @@ function ImagesCtrl($scope, $http) {
             processData: false,
             type: 'POST',
             success: function(data){
-                $scope.listFiles(); // refresh the page
+                listFiles(); // refresh the page
             },
             error: function (data) {
                 alert("fail");
             }
         });
     })
+    /* Registered event listeners end */
 }
 
