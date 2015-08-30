@@ -117,6 +117,7 @@ function Login($scope, $http) {
 
     };
 }
+Login.$inject = ['$scope', '$http'];
 
 /**
  * Sign up controller
@@ -172,6 +173,7 @@ function Signup($scope, $http) {
         });
     }
 }
+Signup.$inject = ['$scope', '$http'];
 
 /**
  * Images controller.
@@ -266,7 +268,6 @@ function ImagesCtrl($scope, $http) {
             }).
             success(function(data, status, headers, config) {
                 $scope.images = data.imageList;
-                console.log("succeed");
             }).
             error(function(data, status, headers, config) {
                 console.log("fail");
@@ -437,4 +438,5 @@ function ImagesCtrl($scope, $http) {
     })
     /* Registered event listeners end */
 }
+ImagesCtrl.$inject = ['$scope', '$http'];
 
