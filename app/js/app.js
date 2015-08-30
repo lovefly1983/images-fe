@@ -16,7 +16,14 @@ angular.module('myApp', ['myApp.filters', 'myApp.services', 'myApp.directives'])
           .otherwise({
               redirectTo: '/'
           });
-  }]);
+    }]).
+    constant("EVENTS", {
+        IMAGES_RESIZED : "imagesResized"
+    }).
+    run(function ($rootScope, EVENTS) {
+        // register it under $rootScope so that it can be shared by different controller.
+        $rootScope.EVENTS = EVENTS;
+    });
 
 
 

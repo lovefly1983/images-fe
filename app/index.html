@@ -24,7 +24,7 @@
                     <div class="navbar-form navbar-right" style="margin-left:-20px">
                         <a class="btn btn-primary" href="#/signup" style="margin-left: 0px">Sign Up</a>
                     </div>
-                    <form id="loginForm" class="navbar-form navbar-right">
+                    <form id="loginForm" class="navbar-form navbar-right hidden" ng-hide="userLogined">
                         <div class="form-group">
                             <input type="text" placeholder="Email" name="email" class="form-control" ng-model="user.email">
                         </div>
@@ -34,7 +34,7 @@
                         <button type="submit" class="btn btn-success">Sign in</button>
                     </form>
 
-                    <ul id="navBar-right" class="nav navbar-nav navbar-right hidden">
+                    <ul id="navBar-right" class="nav navbar-nav navbar-right hidden" ng-show="userLogined">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" style="margin-bottom:-5px" data-toggle="dropdown">
                                 {{userName}}

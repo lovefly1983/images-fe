@@ -22,14 +22,11 @@
     }
 
     ImageApp.utils.login = function() {
-        $('#loginForm').hide();
         $('#navBar-right').removeClass("hidden");
-        $('#navBar-right').show();
     }
 
     ImageApp.utils.logout = function() {
-        $('#loginForm').show();
-        $('#navBar-right').hide();
+        $('#loginForm').removeClass("hidden");
     }
 
     /**
@@ -50,11 +47,11 @@
         return true;
     }
 
-    ImageApp.utils.resetCookie = function() {
+    ImageApp.utils.resetCookie = function($scope) {
         $.cookie('userId', '', { expires: -1 });
         $.cookie('userName', '', { expires: -1 });
+        $scope.userLogined = ImageApp.utils.isLogined();
     }
-
 })();
 
 /**
@@ -67,11 +64,13 @@
 function Login($scope, $http) {
     $scope.logout = function() {
         ImageApp.utils.logout();
-        ImageApp.utils.resetCookie();
+        ImageApp.utils.resetCookie($scope);
     }
 
     // Initialization
     $scope.init = function () {
+        $scope.userLogined = ImageApp.utils.isLogined();
+
         if ($.cookie('userName') !== null) {
             $scope.userName = $.cookie('userName');
         }
@@ -79,13 +78,15 @@ function Login($scope, $http) {
         $("#loginForm").submit(function() {
             var url = "comp/user/login";
             var $loginForm = $(this);
+            var $password = $loginForm.find('input[name="password"]');
 
-            var oldValue = $loginForm.find('input[name="password"]').val();
-            $loginForm.find('input[name="password"]').val(md5(oldValue));
+            var oldValue = $password.val();
+            $password.val(md5(oldValue));
+            // Post the request
             $.ajax({
                 type: "POST",
                 url: url,
-                data: $("#loginForm").serialize(), // serializes the form's elements.
+                data: $loginForm.serialize(), // serializes the form's elements.
                 contentType: false,
                 processData: false,
                 xhrFields: {
@@ -95,6 +96,7 @@ function Login($scope, $http) {
                 {
                     if (data.userId !== -1) {
                         ImageApp.utils.login();
+                        $scope.userLogined = true;
                         // Currently with ajax post, even though we can get "Set-Cookie" in the response header
                         // but the cookie is not set by the browser.
                         // TODO: resolve it later and currently we set the cookie manually with a json response.
@@ -107,22 +109,23 @@ function Login($scope, $http) {
                     }
                 },
                 error: function (data) {
-                    $('#loginForm').show();
-                    $('#navBar-right').hide();
+                    ImageApp.utils.logout();
                 }
             });
             return false; // avoid to execute the actual submit of the form.
         });
 
-
-
-        // Hide the right bar
-        $('#navBar-right').hide();
     };
 }
 
+/**
+ * Sign up controller
+ *
+ * @param $scope
+ * @param $http
+ * @constructor
+ */
 function Signup($scope, $http) {
-    console.log("sdfsdfsd");
     $scope.signup = function() {
         if ($scope.user.name !== undefined &&
             $scope.user.email !== undefined &&
@@ -214,8 +217,12 @@ function ImagesCtrl($scope, $http) {
     $scope.init = function () {
         listFiles();
         if (ImageApp.utils.isLogined()) {
+            $scope.userLogined = true;
             ImageApp.utils.login();
+        } else {
+            ImageApp.utils.logout();
         }
+
         $("#uploadFilesForm").submit(function() {
             // $("#uploadFilesForm").serialize() could not serialize the file so we have to
             // use FormData which is available in most main stream browser (IE 10+ ...)
@@ -336,7 +343,7 @@ function ImagesCtrl($scope, $http) {
 
                         if (data.files.length == data.fileCount) {
                             //$.event.trigger(data);
-                            $scope.$broadcast('imagesResized', data);
+                            $scope.$broadcast($scope.EVENTS.IMAGES_RESIZED, data);
                         }
                     }
                     image.src = readerEvent.target.result;
@@ -404,7 +411,7 @@ function ImagesCtrl($scope, $http) {
     });
 
     // Angularjs style
-    $scope.$on('imagesResized', function (event, data) {
+    $scope.$on($scope.EVENTS.IMAGES_RESIZED, function (event, data) {
         // The raw image is not sent out
         //var data = new FormData($("#uploadFilesForm")[0]);
         var formData = new FormData();
