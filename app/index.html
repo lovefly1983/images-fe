@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My AngularJS App</title>
+        <link rel="stylesheet" href="css/app.css"/>
+        <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse navbar-extra" ng-controller="Login" ng-init="init()">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">Test Project</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <div class="navbar-form navbar-right" style="margin-left:-20px">
+                        <a class="btn btn-primary" href="#/signup" style="margin-left: 0px">Sign Up</a>
+                    </div>
+                    <form id="loginForm" class="navbar-form navbar-right hidden" ng-hide="userLogined">
+                        <div class="form-group">
+                            <input type="text" placeholder="Email" name="email" class="form-control" ng-model="user.email">
+                        </div>
+                        <div class="form-group">
+                            <input type="password" placeholder="Password" name="password" class="form-control" ng-model="password">
+                        </div>
+                        <button type="submit" class="btn btn-success">Sign in</button>
+                    </form>
+
+                    <ul id="navBar-right" class="nav navbar-nav navbar-right hidden" ng-show="userLogined">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" style="margin-bottom:-5px" data-toggle="dropdown">
+                                {{userName}}
+                                <span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Profile</a></li>
+                                <li><a href="#">My Subscription</a></li>
+                                <li><a href="#">Change Password</a></li>
+                                <li class="divider"></li>
+                                <li><a ng-click="logout()">Sign out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <!--/.navbar-collapse -->
+            </div>
+        </nav>
+
+        <div ng-view></div>
+
+        <!-- In production use:
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.2/angular.min.js"></script>
+        -->
+        <script src="lib/angular/angular.js"></script>
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="lib/jquery/jquery.min.js"></script>
+        <script src="lib/jquery/jquery.cookie.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+        <script src="lib/md5/md5.js"></script>
+        <!-- app specific -->
+        <script src="js/services.js"></script>
+        <script src="js/controllers.js"></script>
+        <script src="js/filters.js"></script>
+        <script src="js/directives.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>

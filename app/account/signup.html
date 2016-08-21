@@ -1,0 +1,165 @@
+<style>
+    body {
+        overflow-y: scroll;
+    }
+    a {
+        color: #0088cc;
+    }
+    a:hover {
+        color: #005580;
+    }
+    .form-signin {
+        max-width: 300px;
+        padding: 19px 29px 29px;
+        margin: 0 auto 20px;
+        background-color: #fff;
+        border: 1px solid #e5e5e5;
+        -webkit-border-radius: 5px;
+        -moz-border-radius: 5px;
+        border-radius: 5px;
+        -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        -moz-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+        box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    }
+    .block-center {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .message {
+        border: 1px solid #e6db55;
+        background-color: #ffffe0;
+        padding: 15px 30px 15px 15px;
+        margin: 20px 0;
+    }
+    .navbar-extra {
+        border-radius: 0px;
+        margin-bottom: 30px;
+    }
+    #chat-link {
+        position: fixed;
+        right: 5px;
+        bottom: 10px;
+        background: #fff;
+        border: 1px solid #e0e0e0;
+        padding: 5px 15px 10px 15px;
+        -webkit-border-radius: 5px 0 0 5px;
+        -moz-border-radius: 5px 0 0 5px;
+        -ms-border-radius: 5px 0 0 5px;
+        -o-border-radius: 5px 0 0 5px;
+        border-radius: 5px 0 0 5px;
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        color: #979faf;
+    }
+    .glyphicon-envelope {
+        text-align: center;
+        line-height: 26px;
+        margin-right: 5px;
+        position: relative;
+    }
+    [ng-cloak] { display: none; }
+    .editor {
+        font-size: 14px !important;
+        border: 1px solid #e0e0e0;
+        height: 475px;
+    }
+    .ac {
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-image: url('/static/images/correct.png');
+        background-repeat: no-repeat;
+    }
+    .notac {
+        display: inline-block;
+        height: 16px;
+        width: 16px;
+        background-image: url('/static/images/question.png');
+        background-repeat: no-repeat;
+    }
+    ul.nav li.dropdown:hover > ul.dropdown-menu {
+        display: block;
+    }
+    #subscribe {
+        background-color: #373737;
+    }
+</style>
+<div class="container">
+    <form class="form-signin" id="signupForm" ng-init="init()">
+        <h3 class="form-signin-heading">Sign Up</h3>
+        <hr />
+        <!--
+        <input type='hidden' name='csrfmiddlewaretoken' value='SIMvXadwLXD9WsIcoDwborqzP7soHw2q' />
+        -->
+        <div class="form-group"><input autofocus="autofocus" class="form-control" id="id_username" maxlength="30" name="name" placeholder="Username" type="text" required/></div>
+        <div class="form-group"><input id="id_email" name="email" class="form-control"  placeholder="E-mail address" type="email" required/></div>
+        <div class="form-group"><input id="id_password" name="password" class="form-control"  placeholder="Password" type="password" required/></div>
+
+        <button class="btn btn-primary" type="submit">Sign Up</button>
+
+        <hr>
+        <!--
+        <div class="row socialaccount_ballot">
+            <p class="text-center"> or you can sign up with </p>
+            <ul class="socialaccount_providers">
+
+
+                <style>
+                    .socialaccount_providers li {
+                        float: left;
+                        list-style: none;
+                    }
+                    .socialaccount_providers li a {
+                        width: 40px;
+                        height: 40px;
+                        display: block;
+                        border: 0;
+                        text-indent: -999em;
+                        overflow: hidden;
+                        background-color: transparent;
+                        background-repeat: no-repeat;
+                        text-align: left;
+                        direction: ltr;
+                    }
+                    .github {
+                        background: transparent url(/static/icons/39x40/github.png) no-repeat 0 0;
+                        margin: 0 10px 10px 0;
+                    }
+                    .linkedin {
+                        background: transparent url(/static/icons/39x40/linkedin.png) no-repeat 0 0;
+                        margin: 0 10px 10px 0;
+                    }
+                    .facebook {
+                        background: transparent url(/static/icons/39x40/facebook.png) no-repeat 0 0;
+                        margin: 0 10px 10px 0;
+                    }
+                    .google {
+                        background: transparent url(/static/icons/39x40/google.png) no-repeat 0 0;
+                        margin: 0 10px 10px 0;
+                    }
+                </style>
+                <li>
+                    <a title="Facebook" class="socialaccount_provider facebook"
+                       href="/accounts/facebook/login/">Facebook</a>
+                </li>
+                <li>
+                    <a title="Google" class="socialaccount_provider google"
+                       href="/accounts/google/login/">Google</a>
+                </li>
+                <li>
+                    <a title="LinkedIn" class="socialaccount_provider linkedin"
+                       href="/accounts/linkedin/login/">LinkedIn</a>
+                </li>
+                <li>
+                    <a title="GitHub" class="socialaccount_provider github"
+                       href="/accounts/github/login/">GitHub</a>
+                </li>
+
+            </ul>
+
+        </div>
+        -->
+    </form>
+</div>
